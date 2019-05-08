@@ -35,25 +35,25 @@ session_start();
 
         <!--Form for users to fill in their details to book a hotel-->
         <form action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>" method="post"> 
-            <h1>Book A Hotel</h1>
+            <h1>Book My Hotel</h1>
                 <ul class="form-style-1">
                     <li><label>Full Name: <span class="required">*</span></label><input type="text" name="firstname" class="field-divided" placeholder="First" /> <input type="text" name="lastname" class="field-divided" placeholder="Last" /></li>
                     <li>
-                        <label>Arrival Date: <span class="required">*</span></label>
+                        <label>Check-In Date: <span class="required">*</span></label>
                         <input type="date" name="datein" id="datein" min="2018-01-01" min="2020-12-31" class="field-long" required />
                     </li>
                     <li>
-                        <label>Departure Date: <span class="required">*</span></label>
+                        <label>Check-Out Date: <span class="required">*</span></label>
                         <input type="date" name="dateout" id="dateout" min="2018-01-01" min="2020-12-31" class="field-long" required>
                         </li>
                     <li>
                     <label>Select A Hotel: <span class="required">*</span></label>
                         <select name="hotelname" class="field-select" required>
                             <option> Select A Hotel...</option>
-                            <option value="Silo">The Silo Hotel</option>
-                            <option value="Grace">The Cape Grace Hotel</option>
-                            <option value="Ellerman">Ellerman House</option>
-                            <option value="Cellers">The Cellars-Hohenhort</option>
+                            <option value="The Silo Hotel">The Silo Hotel</option>
+                            <option value="Cape Grace Hotel">The Cape Grace Hotel</option>
+                            <option value="Ellerman House">Ellerman House</option>
+                            <option value="The Celler-Hohenhort">The Cellars-Hohenhort</option>
                         </select>
                     </li>
                     <li>
@@ -77,24 +77,22 @@ session_start();
             $interval = $datetime1->diff($datetime2); 
 
             $daysbooked = $interval->format('%R%a');
-            //echo $daysbooked;
-            //$value;
 
             //switch statement to calculate the cost for the duration of the user's stay
             switch($_POST['hotelname']){
-                case "Silo":
+                case "The Silo Hotel":
                 $value = $daysbooked * 5500;
                 break;
     
-                case "Grace":
+                case "Cape Grace Hotel":
                 $value = $daysbooked * 6600;
                 break;
     
-                case "Ellerman":
+                case "Ellerman House":
                 $value = $daysbooked * 7700;
                 break;
     
-                case "Cellars":
+                case "The Cellar-Hohenhort":
                 $value = $daysbooked * 8800;
                 break;
     
@@ -103,18 +101,22 @@ session_start();
             }
 
             //display booking info to user after "book" button has been pushed
-            echo "<br> 
-                First Name: ". $_SESSION['firstname']."<br>".
-                "Surname: ". $_SESSION['lastname']."<br>".
-                "Start Date: ". $_SESSION['datein']."<br>".
-                "End Date: ". $_SESSION['dateout']."<br>".
-                "Hotel Name: ". $_SESSION['hotelname']."<br>".
-                $interval->format('%R%a days')."<br>"."Cost: R". $value;
+            echo '<div class="provisional">';
+            echo '<h2> ~ Provisional Booking Details ~ </h2>';
+            echo "<strong>Name:</strong> ". $_SESSION['firstname']."<br>".
+                 "<strong>Surname:</strong> ". $_SESSION['lastname']."<br>".
+                 "<strong>Check-in Date:</strong> ". $_SESSION['datein']."<br>".
+                 "<strong>Check-out Date:</strong> ". $_SESSION['dateout']."<br>".
+                 "<strong>Hotel Name:</strong> ". $_SESSION['hotelname']."<br>".
+                 "<strong>Duration of Stay:</strong> ".$interval->format('%R%a days')."<br>".
+                 "<strong>Cost:</strong> R". $value."<br>";
 
             //mini-form (only a "confirm" button) displayed with user's provisional booking information. 
             echo '<form method="post" action="<?php echo htmlentities($_SERVER["PHP_SELF"]); ?>
                 <input type="submit" name="confirm" value="Confirm">
                 </form>';
+
+            echo "</div>";
 
             //"template" for inserting user inputs into "bookings" table when the user presses "confirm" button. 
             if (isset($_POST['confirm'])) {
@@ -130,7 +132,9 @@ session_start();
 
                 //execute the above statement
                 $stmt-> execute();
+                echo '<div class="confirmation">';
                 echo "Booking confirmed";
+                echo '</div>';
             }
             
             ?>
