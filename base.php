@@ -1,7 +1,7 @@
 <?php
 //
-    define ('MY_SERVER','localhost');
-    define ('MY_USERNAME','jim');
-    define ('MY_PASSWORD','jimspass');
-    define ('MY_DBNAME','hotels');
+    define('DB_SERVER','localhost');
+    define('DB_USERNAME','root');
+    define('DB_PASSWORD','');
+    define('DB_NAME','hotels');
 ?>

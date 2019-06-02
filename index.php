@@ -8,28 +8,29 @@ session_start();
     <head>
         <title>Hotel Booking Form</title>
         <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
     </head>
     <body>
         <?php
             //Connect the connect
             require_once "connect.php";
 
-            //The query to create "bookings" table skeleton in "hotels" database
-            $sql = "CREATE TABLE IF NOT EXISTS bookings (
-            id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            firstname VARCHAR(50),
-            lastname VARCHAR(50),
-            hotelname VARCHAR(50),
-            datein VARCHAR(30),
-            dateout VARCHAR(30),
-            booked INT(4))";
+              //The query to create "bookings" table skeleton in "hotels" database
+              $sql = "CREATE TABLE IF NOT EXISTS bookings (
+                id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                firstname VARCHAR(50),
+                lastname VARCHAR(50),
+                hotelname VARCHAR(50),
+                datein VARCHAR(30),
+                dateout VARCHAR(30),
+                booked INT(4))";
 
-            
-            $conn ->query($sql);
-            //echo an error if there is an error
-            echo $conn->error;
+                $conn ->query($sql);
+                //echo an error if there is an error
+                echo $conn->error;
 
         ?>
 
@@ -72,10 +73,11 @@ session_start();
             }
 
             //calculate duration of user's stay at selected hotel
+            if (isset($_POST['submit'])) {
+
             $datetime1 = new DateTime($_SESSION['datein']);
             $datetime2 = new DateTime($_SESSION['dateout']);
             $interval = $datetime1->diff($datetime2); 
-
             $daysbooked = $interval->format('%R%a');
 
             //switch statement to calculate the cost for the duration of the user's stay
@@ -98,9 +100,9 @@ session_start();
     
                 default:
                 return "Invalid Booking. Please try again.";
-            }
+            }            
 
-            //display booking info to user after "book" button has been pushed
+            //display provisional booking info to user after "book" button has been pushed
             echo '<div class="provisional">';
             echo '<h2> ~ Provisional Booking Details ~ </h2>';
             echo "<strong>Name:</strong> ". $_SESSION['firstname']."<br>".
@@ -112,16 +114,16 @@ session_start();
                  "<strong>Cost:</strong> R". $value."<br>";
 
             //mini-form (only a "confirm" button) displayed with user's provisional booking information. 
-            echo '<form method="post" action="<?php echo htmlentities($_SERVER["PHP_SELF"]); ?>
-                <input type="submit" name="confirm" value="Confirm">
-                </form>';
+            echo '<form role="form" action="index.php " method="post"> <input name="confirm" type="submit"></form>';
 
-            echo "</div>";
+            echo '</div>';
+
+        }
 
             //"template" for inserting user inputs into "bookings" table when the user presses "confirm" button. 
-            if (isset($_POST['confirm'])) {
+            if (isset($_POST["confirm"])) {
                 $stmt= $conn->prepare("INSERT INTO bookings (firstname, lastname, datein, dateout, hotelname) VALUES (?,?,?,?,?)");
-                $stmt-> bind_param('sssss', $firstname, $lastname, $datein, $dateout, $hotelname);
+                $stmt->bind_param('sssss', $firstname, $lastname, $datein, $dateout, $hotelname);
 
                 //set the parameters
                 $firstname = $_SESSION["firstname"];
@@ -131,9 +133,11 @@ session_start();
                 $hotelname = $_SESSION["hotelname"];
 
                 //execute the above statement
-                $stmt-> execute();
-                echo '<div class="confirmation">';
-                echo "Booking confirmed";
+                $stmt->execute();
+
+                //booking confirmation message displayed after used has clicked "confirm"
+                echo '<div class="confirm-btn">';
+                echo '<img src="images/green-tick.png" alt="green-tick-icon"> <p>Booking confirmed</p>';
                 echo '</div>';
             }
             

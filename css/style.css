@@ -1,11 +1,12 @@
 /* ------ Background Image ------ */
 html {
-    background-image: url(images/hotel-1.jpg);
+    background-image: url(../images/hotel-1.jpg);
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
-    background-size: cover;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+	background-size: cover;
+	background-repeat: repeat;
+    font-family: 'Roboto', sans-serif;
 }
 
 /* ------ "Book My Trip" heading ------ */
@@ -23,7 +24,7 @@ h1 {
 	max-width: 400px;
 	padding: 20px 12px 10px 20px;
 	font-size: 13px;
-	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+	font-family: 'Roboto', sans-serif;
     background-color: white;
     opacity: 0.95;
 }
@@ -44,12 +45,6 @@ h1 {
 
 .form-style-1 input[type=text], 
 .form-style-1 input[type=date],
-.form-style-1 input[type=datetime],
-.form-style-1 input[type=number],
-.form-style-1 input[type=search],
-.form-style-1 input[type=time],
-.form-style-1 input[type=url],
-.form-style-1 input[type=email],
 textarea, 
 select{
 	box-sizing: border-box;
@@ -67,12 +62,6 @@ select{
 
 .form-style-1 input[type=text]:focus, 
 .form-style-1 input[type=date]:focus,
-.form-style-1 input[type=datetime]:focus,
-.form-style-1 input[type=number]:focus,
-.form-style-1 input[type=search]:focus,
-.form-style-1 input[type=time]:focus,
-.form-style-1 input[type=url]:focus,
-.form-style-1 input[type=email]:focus,
 .form-style-1 textarea:focus, 
 .form-style-1 select:focus{
 	-moz-box-shadow: 0 0 8px #88D5E9;
@@ -96,14 +85,14 @@ select{
 	width: 100%;
 }
 
-.form-style-1 input[type=submit], .form-style-1 input[type=button]{
+.form-style-1 input[type=submit]{
 	background: #4B99AD;
 	padding: 8px 15px 8px 15px;
 	border: none;
 	color: #fff;
 }
 
-.form-style-1 input[type=submit]:hover, .form-style-1 input[type=button]:hover{
+.form-style-1 input[type=submit]:hover{
 	background: #4691A4;
 	box-shadow:none;
 	-moz-box-shadow:none;
@@ -120,7 +109,7 @@ select{
 	max-width: 400px;
 	padding: 20px 12px 10px 20px;
 	font-size: 13px;
-	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+	font-family: 'Roboto', sans-serif;
     background-color: white;
     opacity: 0.95;
 }
@@ -139,15 +128,19 @@ select{
 	color: #fff;
 }
 
-.confirmation {
+.confirm-btn {
 	margin:10px auto;
 	max-width: 400px;
 	padding: 20px 12px 10px 20px;
-	font-size: 20px;
-	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    background-color: rgb(250, 229, 229);
+	font-size: 18px;
+	font-family: 'Roboto', sans-serif;
+    background-color: white;
 	opacity: 0.95;
 	text-align: center;
+}
+
+.confirm-btn p {
+	font-size: 20px;
 }
 
 
