@@ -100,7 +100,28 @@ session_start();
     
                 default:
                 return "Invalid Booking. Please try again.";
-            }            
+            }     
+            
+            $firstname = $_POST['firstname'];
+            $lastname = $_POST['lastname'];
+
+            $result = mysqli_query($conn,"SELECT hotelname, datein, dateout, firstname, lastname FROM bookings WHERE firstname='$firstname' && lastname='$lastname'"); 
+
+            if ($result->num_rows > 0) {
+
+                while ($row = $result->fetch_assoc()) {
+                    echo '<div class="provisional">';
+                    echo '<h2> ~ Previous Bookings ~ </h2>';
+                    echo "<strong>Hotel Name:</strong> ".$row['hotelname']."<br>".
+                        "<strong>Check-in Date:</strong> ".$row['datein']."<br>".
+                        "<strong>Check-out Date:</strong> ".$row['dateout']."<br>".
+                        "<strong>Name:</strong> ".$row['firstname']."<br>".
+                        "<strong>Surname:</strong> ".$row['lastname']."<br>";
+                    echo "<br><strong></strong>";
+                    echo '</div>';
+                } 
+            }
+
 
             //display provisional booking info to user after "book" button has been pushed
             echo '<div class="provisional">';
