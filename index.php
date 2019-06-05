@@ -11,6 +11,7 @@ session_start();
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="css/style.css">
+        <script src="jquery-3.4.0.min.js"></script>
         <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
     </head>
     <body>
@@ -32,20 +33,27 @@ session_start();
                 //echo an error if there is an error
                 echo $conn->error;
 
+            if (isset($_GET['error']) && $_GET['error'] == 'timestamp') {
         ?>
+            <div class='provisional'>
+                <h3 class="warning">You must select at least  1 day </h3>
+            </div>
+        <?php
+            }
+              ?>
 
         <!--Form for users to fill in their details to book a hotel-->
         <form action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>" method="post"> 
             <h1>Book My Hotel</h1>
                 <ul class="form-style-1">
-                    <li><label>Full Name: <span class="required">*</span></label><input type="text" name="firstname" class="field-divided" placeholder="First" /> <input type="text" name="lastname" class="field-divided" placeholder="Last" /></li>
+                    <li><label>Full Name: <span class="required">*</span></label><input type="text" name="firstname" class="field-divided" placeholder="First" required/> <input type="text" name="lastname" class="field-divided" placeholder="Last" required/></li>
                     <li>
                         <label>Check-In Date: <span class="required">*</span></label>
-                        <input type="date" name="datein" id="datein" min="2018-01-01" min="2020-12-31" class="field-long" required />
+                        <input type="date" name="datein" id="datein" min="2018-01-01" max="2020-12-31" class="field-long" required />
                     </li>
                     <li>
                         <label>Check-Out Date: <span class="required">*</span></label>
-                        <input type="date" name="dateout" id="dateout" min="2018-01-01" min="2020-12-31" class="field-long" required>
+                        <input type="date" name="dateout" id="dateout" min="2018-01-02" max="2020-12-31" step="1" class="field-long" required>
                         </li>
                     <li>
                     <label>Select A Hotel: <span class="required">*</span></label>
@@ -62,7 +70,9 @@ session_start();
                     </li>
                 </ul>
         </form>
+
         <?php
+
             //assigning the information that the user inputs to session variables so that the information is stored
             if (isset($_POST['submit'])) {
                 $_SESSION['firstname'] = $_POST['firstname'];
@@ -71,7 +81,7 @@ session_start();
                 $_SESSION['datein'] = $_POST['datein'];
                 $_SESSION['dateout'] = $_POST['dateout'];
             }
-
+            
             //calculate duration of user's stay at selected hotel
             if (isset($_POST['submit'])) {
 
@@ -79,6 +89,14 @@ session_start();
             $datetime2 = new DateTime($_SESSION['dateout']);
             $interval = $datetime1->diff($datetime2); 
             $daysbooked = $interval->format('%R%a');
+
+            $checkInStamp = strtotime($_SESSION['datein']);
+            $checkOutStamp = strtotime($_SESSION['dateout']);
+        
+            if ($checkInStamp - $checkOutStamp > 86400 || $checkInStamp == $checkOutStamp) {
+                header("Location: ?error=timestamp");
+                exit;
+            }
 
             //switch statement to calculate the cost for the duration of the user's stay
             switch($_POST['hotelname']){
@@ -100,28 +118,25 @@ session_start();
     
                 default:
                 return "Invalid Booking. Please try again.";
-            }     
+            }        
             
+            //function to check for bookings that already exist by checking for first and last names that already exist in the database and displaying the existing booking to the user before they confirm their new booking
             $firstname = $_POST['firstname'];
             $lastname = $_POST['lastname'];
 
-            $result = mysqli_query($conn,"SELECT hotelname, datein, dateout, firstname, lastname FROM bookings WHERE firstname='$firstname' && lastname='$lastname'"); 
-
+            $result = mysqli_query($conn,"SELECT hotelname, datein, dateout FROM bookings WHERE firstname='$firstname' && lastname='$lastname'"); 
             if ($result->num_rows > 0) {
 
                 while ($row = $result->fetch_assoc()) {
                     echo '<div class="provisional">';
-                    echo '<h2> ~ Previous Bookings ~ </h2>';
+                    echo '<h3 class="warning"> ~ Your previous bookings with us ~ </h3>';
                     echo "<strong>Hotel Name:</strong> ".$row['hotelname']."<br>".
                         "<strong>Check-in Date:</strong> ".$row['datein']."<br>".
-                        "<strong>Check-out Date:</strong> ".$row['dateout']."<br>".
-                        "<strong>Name:</strong> ".$row['firstname']."<br>".
-                        "<strong>Surname:</strong> ".$row['lastname']."<br>";
+                        "<strong>Check-out Date:</strong> ".$row['dateout']."<br>";
                     echo "<br><strong></strong>";
                     echo '</div>';
                 } 
             }
-
 
             //display provisional booking info to user after "book" button has been pushed
             echo '<div class="provisional">';

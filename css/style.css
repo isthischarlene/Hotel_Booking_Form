@@ -144,3 +144,7 @@ select{
 }
 
 
+.warning {
+	color: red;
+	text-align: center;
+}
